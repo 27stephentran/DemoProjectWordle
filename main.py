@@ -7,8 +7,16 @@ WORDS = ["apple", "grade", "grape", "melon"]
 secret_word = random.choice(WORDS).upper()
 app = Flask(__name__)
 
-@app.route("/", methods = ["GET", "POST"])
+
+
+@app.route("/")
 def index():
+    return render_template("index.html")
+
+
+
+@app.route("/wordle_page", methods = ["GET", "POST"])
+def wordle_page():
     guess = [''] * len(secret_word)
     if request.method == "POST":
         guess = [
@@ -19,14 +27,14 @@ def index():
         guess_word = "".join(guess)
 
         if len(guess_word) != len(secret_word):
-            return render_template("index.html", error = "Word must be the correct length", word_length = len(secret_word), guess = guess)
+            return render_template("wordle_page.html", error = "Word must be the correct length", word_length = len(secret_word), guess = guess)
         feedback = check_guess(guess_word, secret_word)
 
         if guess_word == secret_word:
-            return render_template("index.html", feedback=feedback, success= True, word_length = len(secret_word), guess= guess)
+            return render_template("wordle_page.html", feedback=feedback, success= True, word_length = len(secret_word), guess= guess)
 
-        return render_template("index.html", feedback= feedback, guess= guess, word_length = len(secret_word))
-    return render_template("index.html", word_length = len(secret_word), guess= guess)        
+        return render_template("wordle_page.html", feedback= feedback, guess= guess, word_length = len(secret_word))
+    return render_template("wordle_page.html", word_length = len(secret_word), guess= guess)        
 
 
 def check_guess(guess_word, secret_word):
